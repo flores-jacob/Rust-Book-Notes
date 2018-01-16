@@ -32,8 +32,11 @@ So far, these are the areas of note:
 2. Run `cargo new some_name --bin`. This will create a folder named
 `some_name` which has the proper directory structure to hold the script 
 that we will be downloading next.
+    ```
+    $ cargo new some_name --bin
+    ```
 3. Either download one of the sample codes [above](####-Runnable-exercises)
-and overwrite the `main.rs` file found in the previously created 
+and overwrite the `main.rs` file found in the previously created directory located at:
     ```bash
     some_name/src/main.rs
     ```
