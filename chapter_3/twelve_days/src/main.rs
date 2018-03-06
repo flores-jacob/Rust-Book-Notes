@@ -37,4 +37,7 @@ fn main() {
         }
         println!{"\n"}
     }
+
+//        println!("is upper => {}", "WATCH OUT!".chars().ne(char::is_uppercase));
+
 }
