@@ -11,7 +11,7 @@ namespace.
 - The `use` keyword brings modules, or the definitions inside modules, 
 into scope so it’s easier to refer to them.
 
-## 6.1 `mod` and the Filesystem
+## 7.1 `mod` and the Filesystem
 
 #### Creating a library
 - By default, Cargo will create a library unless another type of project
@@ -104,3 +104,106 @@ function
 for foo in a file named foo.rs.
 - If a module named foo does have submodules, you should put the declarations 
 for foo in a file named foo/mod.rs.
+
+
+## 7.2 Controlling Visibility with `pub`
+- Rust modules and functions are private by default, and cannot be called
+by external code.
+
+### Making a Function Public
+- To tell Rust to make a function public, we add the `pub` keyword to the 
+start of the declaration.
+- Example: To make the module `client` public, we use the code below:
+    ```rust
+    pub mod client;
+    ```
+- Example2: TO make the function `connect` public, we use the code below:
+    ```rust
+    pub fn connect() {
+    }    
+    ```
+    
+### Privacy Rules
+1. If an item is public, it can be accessed through any of its parent modules.
+2. If an item is private, it can be accessed only by its immediate parent 
+module and any of the parent’s child modules
+
+## 7.3 Referring to Names in Different Modules
+- Example:
+    ```rust
+        pub mod a {
+            pub mod series {
+                pub mod of {
+                    pub fn nested_modules() {}
+                }
+            }
+        }
+    
+        use a::series::of; // Use the "use" keyword to bring "of" into scope
+        
+        fn main() {
+            of::nested_modules(); // We can call of without mentioning all
+                                  // of its parents
+                                  // Otherwise, calling the same code will
+                                  // be like so:
+                                  // a::series::of::nested_modules();
+        }    
+    ```
+    
+- Example2: Bring `enums` variants into scope
+    - if bringing multiple items from one namespace into scope, we
+    can list them using curly brackets and commas in the last position, 
+    like so:
+    ```rust
+    enum TrafficLight {
+        Red,
+        Yellow,
+        Green,
+    }
+    
+    use TrafficLight::{Red, Yellow};  // Note how both Red and Yellow
+                                      // were brought into scope
+    
+    fn main() {
+        let red = Red;
+        let yellow = Yellow;
+        let green = TrafficLight::Green;
+    }
+    ```
+    
+#### Bringing All Names into Scope with a Glob
+- To bring all the items in a namespace into scope at once, we can use 
+the * syntax, which is called the glob operator.
+- Example:
+    ```rust
+    enum TrafficLight {
+        Red,
+        Yellow,
+        Green,
+    }
+    
+    use TrafficLight::*;  // Note how we use the * operator to bring all
+                          // the enums variants into scope
+    
+    fn main() {
+        let red = Red;
+        let yellow = Yellow;
+        let green = Green;
+    }    
+    ```     
+    
+#### Using `super` to Access a Parent Module
+- Paths are always relative to the current module. The only exception is 
+in a use statement, where paths are relative to the crate root by default.
+- To refer to functions and modules contained in parent modules, there
+are two options:
+    1. Use leading colons to let Rust know that we want to start from 
+    the root and list the whole path
+        ```rust
+        ::client::connect();
+        ```
+    2. Use `super` to move up one module in the hierarchy from our current 
+    module
+        ```rust
+        super::client::connect();
+        ```
